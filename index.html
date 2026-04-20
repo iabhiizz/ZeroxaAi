@@ -1,40 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unsent</title>
-
 <style>
 body{
   margin:0;
-  overflow:hidden;
+  background:#000;
+  color:#fff;
   font-family:sans-serif;
-  color:white;
-  background:black;
+  overflow:hidden;
 }
 
-/* background gif */
-.bg{
-  position:fixed;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  filter:blur(8px) brightness(0.5);
-  z-index:0;
-}
-
-/* dark overlay */
-.overlay{
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.5);
-  z-index:1;
-}
-
-/* main scene */
-#scene{
+/* scene */
+.scene{
   position:absolute;
   width:100%;
   height:100%;
@@ -42,123 +20,102 @@ body{
   justify-content:center;
   align-items:center;
   text-align:center;
-  z-index:2;
-}
-
-/* text */
-.text{
-  max-width:350px;
-  font-size:18px;
-  line-height:1.6;
+  font-size:20px;
   opacity:0;
-  transition:1.2s;
+  transform:scale(1.05);
+  transition:0.5s ease;
 }
 
-.show{ opacity:1 }
+.show{
+  opacity:1;
+  transform:scale(1);
+}
 
-/* chat bubble */
+/* glitch */
+@keyframes glitch{
+  0%{transform:translate(0)}
+  20%{transform:translate(-2px,2px)}
+  40%{transform:translate(2px,-2px)}
+  60%{transform:translate(-1px,1px)}
+  80%{transform:translate(1px,-1px)}
+  100%{transform:translate(0)}
+}
+
+/* phone ui */
+.phone{
+  width:300px;
+  height:550px;
+  background:#111;
+  border-radius:25px;
+  padding:15px;
+  box-shadow:0 0 30px rgba(255,255,255,0.1);
+}
+
 .chat{
-  background:#1a1a1a;
-  padding:10px;
-  border-radius:12px;
-  margin-top:15px;
   font-size:14px;
   text-align:left;
 }
 
-/* call */
-.call{
-  font-size:14px;
-  opacity:0.7;
+.msg{
+  background:#222;
+  padding:8px;
+  border-radius:10px;
+  margin-top:10px;
 }
+
 </style>
 </head>
 
 <body>
 
-<!-- background GIF -->
-<img class="bg" src="https://media.giphy.com/media/3o7TKtnuHOHHUjR38Y/giphy.gif">
+<div id="s1" class="scene show">2:17 AM</div>
 
-<div class="overlay"></div>
-
-<div id="scene">
-  <div id="content"></div>
+<div id="s2" class="scene">
+  <div class="phone">Opening chat...</div>
 </div>
 
-<audio id="rainSound" loop>
-<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">
-</audio>
+<div id="s3" class="scene">
+  <div class="phone chat">
+    <div class="msg">Typing...</div>
+    <div class="msg" id="typing">Hey...</div>
+  </div>
+</div>
+
+<div id="s4" class="scene">Deleted.</div>
+
+<div id="s5" class="scene">Calling...</div>
+
+<div id="s6" class="scene">Call ended.</div>
+
+<div id="s7" class="scene">You moved on.</div>
+
+<div id="s8" class="scene" style="animation:glitch 0.3s infinite">
+  Or did you?
+</div>
+
+<div id="s9" class="scene">You still check her profile.</div>
+
+<div id="s10" class="scene">You just don’t admit it.</div>
 
 <script>
-let c = document.getElementById("content");
 
-/* scene helper */
-function show(html){
-  c.innerHTML = `<div class="text">${html}</div>`;
-  setTimeout(()=> document.querySelector(".text").classList.add("show"),100);
+let scenes = ["s1","s2","s3","s4","s5","s6","s7","s8","s9","s10"];
+let i=0;
+
+function next(){
+  document.getElementById(scenes[i]).classList.remove("show");
+  i++;
+  if(i < scenes.length){
+    document.getElementById(scenes[i]).classList.add("show");
+  }
 }
 
-/* timeline */
+setInterval(next,2000);
+
+/* typing delete */
 setTimeout(()=>{
-
-  document.getElementById("rainSound").play();
-
-  show("2:17 AM…");
-
-  setTimeout(()=>{
-    show("You open the chat again.");
-  },4000);
-
-  setTimeout(()=>{
-    c.innerHTML = `
-    <div class="text show">
-      <div>Typing…</div>
-      <div class="chat" id="msg">Hey… I was just thinking about you</div>
-    </div>`;
-  },8000);
-
-  setTimeout(()=>{
-    document.getElementById("msg").innerHTML="…";
-  },11000);
-
-  setTimeout(()=>{
-    document.getElementById("msg").style.opacity="0.3";
-  },13000);
-
-  setTimeout(()=>{
-    c.innerHTML = `
-    <div class="text show">
-      Calling…
-      <div class="call">ringing…</div>
-    </div>`;
-  },16000);
-
-  setTimeout(()=>{
-    show("Call ended.");
-  },20000);
-
-  setTimeout(()=>{
-    show(`
-    Sach bolu… mujhe lagta tha sab theek ho jayega.  
-    Par tu gayi nahi… tu bas baat karna band kar di.  
-    Aur shayad sabse zyada dard isi baat ka hai…  
-    ki main ab bhi wahi hoon… aur tu aage badh gayi.
-    `);
-  },24000);
-
-  setTimeout(()=>{
-    show("You won’t text her.");
-  },38000);
-
-  setTimeout(()=>{
-    show("But you want to.");
-  },45000);
-
-  setTimeout(()=>{
-    show("She doesn’t text either.");
-  },52000);
-
-},1000);
+  document.getElementById("typing").innerHTML="...";
+},3500);
 
 </script>
 
