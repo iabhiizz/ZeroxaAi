@@ -2,121 +2,135 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unsent</title>
+
 <style>
 body{
   margin:0;
-  background:#000;
-  color:#fff;
-  font-family:sans-serif;
-  overflow:hidden;
+  font-family: 'Inter', sans-serif;
+  background:#0d0d0d;
+  color:white;
+  overflow-x:hidden;
 }
 
-/* scene */
-.scene{
-  position:absolute;
-  width:100%;
-  height:100%;
+/* sections */
+.section{
+  height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
   text-align:center;
-  font-size:20px;
-  opacity:0;
-  transform:scale(1.05);
-  transition:0.5s ease;
+  padding:20px;
 }
 
-.show{
-  opacity:1;
-  transform:scale(1);
+/* text */
+.big{
+  font-size:28px;
+  max-width:320px;
+  line-height:1.4;
 }
 
-/* glitch */
-@keyframes glitch{
-  0%{transform:translate(0)}
-  20%{transform:translate(-2px,2px)}
-  40%{transform:translate(2px,-2px)}
-  60%{transform:translate(-1px,1px)}
-  80%{transform:translate(1px,-1px)}
-  100%{transform:translate(0)}
+/* background gif */
+.bg{
+  position:fixed;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:blur(10px) brightness(0.4);
+  z-index:-1;
 }
 
-/* phone ui */
-.phone{
-  width:300px;
-  height:550px;
-  background:#111;
-  border-radius:25px;
-  padding:15px;
-  box-shadow:0 0 30px rgba(255,255,255,0.1);
-}
-
+/* chat box */
 .chat{
-  font-size:14px;
+  background:#1a1a1a;
+  padding:15px;
+  border-radius:15px;
   text-align:left;
+  max-width:280px;
 }
 
 .msg{
-  background:#222;
+  background:#2a2a2a;
   padding:8px;
   border-radius:10px;
   margin-top:10px;
 }
 
+/* fade animation */
+.fade{
+  opacity:0;
+  transform:translateY(30px);
+  transition:1s;
+}
+
+.show{
+  opacity:1;
+  transform:translateY(0);
+}
 </style>
 </head>
 
 <body>
 
-<div id="s1" class="scene show">2:17 AM</div>
+<img class="bg" src="https://media.giphy.com/media/3o7TKtnuHOHHUjR38Y/giphy.gif">
 
-<div id="s2" class="scene">
-  <div class="phone">Opening chat...</div>
+<div class="section fade">
+  <div class="big">It’s 2:17 AM</div>
 </div>
 
-<div id="s3" class="scene">
-  <div class="phone chat">
-    <div class="msg">Typing...</div>
-    <div class="msg" id="typing">Hey...</div>
+<div class="section fade">
+  <div class="big">You open the chat again</div>
+</div>
+
+<div class="section fade">
+  <div class="chat">
+    <div>Typing...</div>
+    <div class="msg">Hey… I was just thinking about you</div>
   </div>
 </div>
 
-<div id="s4" class="scene">Deleted.</div>
-
-<div id="s5" class="scene">Calling...</div>
-
-<div id="s6" class="scene">Call ended.</div>
-
-<div id="s7" class="scene">You moved on.</div>
-
-<div id="s8" class="scene" style="animation:glitch 0.3s infinite">
-  Or did you?
+<div class="section fade">
+  <div class="big">You delete it</div>
 </div>
 
-<div id="s9" class="scene">You still check her profile.</div>
+<div class="section fade">
+  <div class="big">Calling...</div>
+</div>
 
-<div id="s10" class="scene">You just don’t admit it.</div>
+<div class="section fade">
+  <div class="big">
+    Sach bolu… mujhe lagta tha sab theek ho jayega.  
+    Par tu gayi nahi… tu bas baat karna band kar di.  
+    Aur main… wahi ruk gaya.
+  </div>
+</div>
+
+<div class="section fade">
+  <div class="big">You won’t text her</div>
+</div>
+
+<div class="section fade">
+  <div class="big">But you want to</div>
+</div>
+
+<div class="section fade">
+  <div class="big">She doesn’t text either</div>
+</div>
 
 <script>
+const sections = document.querySelectorAll(".fade");
 
-let scenes = ["s1","s2","s3","s4","s5","s6","s7","s8","s9","s10"];
-let i=0;
-
-function next(){
-  document.getElementById(scenes[i]).classList.remove("show");
-  i++;
-  if(i < scenes.length){
-    document.getElementById(scenes[i]).classList.add("show");
-  }
+function reveal(){
+  sections.forEach(sec=>{
+    let top = sec.getBoundingClientRect().top;
+    if(top < window.innerHeight - 100){
+      sec.classList.add("show");
+    }
+  });
 }
 
-setInterval(next,2000);
-
-/* typing delete */
-setTimeout(()=>{
-  document.getElementById("typing").innerHTML="...";
-},3500);
-
+window.addEventListener("scroll", reveal);
+reveal();
 </script>
 
 </body>
