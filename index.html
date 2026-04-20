@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unsent 💔</title>
+
+<style>
+body{
+  margin:0;
+  background:#000;
+  color:#fff;
+  font-family: 'Segoe UI',sans-serif;
+  overflow:hidden;
+}
+
+#scene{
+  position:absolute;
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:20px;
+}
+
+.text{
+  max-width:380px;
+  font-size:18px;
+  line-height:1.6;
+  opacity:0;
+  transition:1s;
+}
+
+.show{
+  opacity:1;
+}
+
+.fadeOut{
+  opacity:0;
+  transition:1s;
+}
+
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:0;
+  opacity:0.25;
+}
+
+.flash{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:white;
+  opacity:0;
+  z-index:1;
+}
+
+#scene{ z-index:2; }
+</style>
+</head>
+
+<body>
+
+<canvas id="rain"></canvas>
+<div class="flash" id="flash"></div>
+<div id="scene"><div id="text" class="text"></div></div>
+
+<audio id="rainSound" loop>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">
+</audio>
+
+<script>
+const textEl = document.getElementById("text");
+const flash = document.getElementById("flash");
+
+/* 🎬 SCENES */
+const scenes = [
+  "It’s 2:17 AM…",
+  "You open the chat again.",
+  "No new messages.",
+  "Still… you check.",
+  "Typing…",
+  "…",
+  "You write something.",
+  "Then delete it.",
+  "Again.",
+  "",
+  "You miss her.",
+  "",
+  "More than you admit.",
+  "",
+  "You won’t text her.",
+  "",
+  "But you wish…",
+  "she texts you."
+];
+
+let i = 0;
+
+function nextScene(){
+  textEl.classList.remove("show");
+
+  setTimeout(()=>{
+    textEl.innerText = scenes[i];
+    textEl.classList.add("show");
+    i++;
+
+    if(i < scenes.length){
+      setTimeout(nextScene, 2200);
+    }
+  },800);
+}
+
+/* 🎧 Start film */
+setTimeout(()=>{
+  document.getElementById("rainSound").play();
+  nextScene();
+},1000);
+
+/* 🌧 RAIN */
+const canvas = document.getElementById("rain");
+const ctx = canvas.getContext("2d");
+
+let w,h;
+function resize(){
+  w=canvas.width=innerWidth;
+  h=canvas.height=innerHeight;
+}
+resize();
+addEventListener("resize",resize);
+
+let drops=[];
+for(let i=0;i<150;i++){
+  drops.push({
+    x:Math.random()*w,
+    y:Math.random()*h,
+    l:Math.random()*20,
+    s:Math.random()*4+4
+  });
+}
+
+function rain(){
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle="rgba(255,255,255,0.15)";
+
+  for(let d of drops){
+    ctx.beginPath();
+    ctx.moveTo(d.x,d.y);
+    ctx.lineTo(d.x,d.y+d.l);
+    ctx.stroke();
+
+    d.y+=d.s;
+    if(d.y>h){ d.y=0; d.x=Math.random()*w;}
+  }
+
+  requestAnimationFrame(rain);
+}
+rain();
+
+/* ⚡ LIGHTNING */
+function lightning(){
+  flash.style.opacity=0.5;
+  setTimeout(()=>flash.style.opacity=0,80);
+}
+
+setInterval(()=>{
+  if(Math.random()>0.8) lightning();
+},3000);
+
+</script>
+
+</body>
+</html>
